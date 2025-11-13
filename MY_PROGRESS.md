@@ -121,6 +121,44 @@ mkdir -p models schemas repositories services routes
 
 ✅ Project structure created following clean architecture principles
 
+### 6. Core Application Files
+
+Created essential configuration and database setup files:
+
+**Files created:**
+
+- `app/__init__.py` - Makes `app` directory a Python package
+- `app/config.py` - **Application Configuration**
+  - Uses `pydantic-settings` for settings management
+  - Defines application settings with defaults:
+    - `app_name`: "FastAPI Shop"
+    - `debug`: True (development mode)
+    - `database_url`: SQLite database path (`sqlite:///./shop.db`)
+    - `cors_origins`: List of allowed frontend origins (localhost ports for development)
+    - `static_dir`: Directory for static files
+    - `images_dir`: Directory for image uploads
+  - Loads environment variables from `.env` file
+  - Provides `settings` object for use throughout the application
+
+- `app/database.py` - **Database Connection & Session Management**
+  - Creates SQLAlchemy engine with database connection
+  - Configures `SessionLocal` for database sessions
+  - Defines `Base` class for declarative models (all models will inherit from this)
+  - `get_db()`: Dependency function for FastAPI to get database session
+    - Uses generator pattern (`yield`) to ensure database connection is properly closed
+    - Automatically handles session cleanup
+  - `init_db()`: Function to initialize database tables (creates all tables)
+
+- `backend/__init__.py` - Makes `backend` directory a Python package
+
+**Key Concepts:**
+
+- **Configuration Management**: Using Pydantic Settings allows type-safe configuration with automatic environment variable loading
+- **Database Sessions**: SQLAlchemy session management ensures proper connection handling and cleanup
+- **Dependency Injection**: `get_db()` function will be used as a FastAPI dependency to inject database sessions into route handlers
+
+✅ Core application infrastructure files created
+
 ## Architecture Theory
 
 ### Clean Architecture / Layered Architecture
@@ -253,7 +291,10 @@ def create(user_data: UserCreate):
 - ✅ Core dependencies installed
 - ✅ Requirements file created
 - ✅ Project structure initialized
-- ⏳ Next: Create main application files and start building the API
+- ✅ Core application files created (`config.py`, `database.py`)
+- ✅ Database connection and session management configured
+- ✅ Application settings configured with Pydantic Settings
+- ⏳ Next: Create database models, schemas, repositories, services, and routes
 
 ## Notes
 
