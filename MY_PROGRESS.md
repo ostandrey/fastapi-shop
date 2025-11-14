@@ -159,6 +159,58 @@ Created essential configuration and database setup files:
 
 ✅ Core application infrastructure files created
 
+### 7. Database Models Created
+
+Created SQLAlchemy models for the e-commerce shop:
+
+**Files created:**
+
+- `app/models/__init__.py` - Exports all models for easy importing
+  - Exports: `Category`, `Product`
+
+- `app/models/category.py` - **Category Model**
+  - Table name: `categories`
+  - Fields:
+    - `id` (Integer, Primary Key, Indexed)
+    - `name` (String, Unique, Not Null, Indexed) - Category name
+    - `slug` (String, Unique, Not Null, Indexed) - URL-friendly identifier
+  - Relationships:
+    - `products` - One-to-Many relationship with Product model
+  - Includes `__repr__` method for debugging
+
+- `app/models/product.py` - **Product Model**
+  - Table name: `product`
+  - Fields:
+    - `id` (Integer, Primary Key, Indexed)
+    - `name` (String, Not Null, Indexed) - Product name
+    - `description` (Text) - Product description
+    - `price` (Float, Not Null) - Product price
+    - `category_id` (Integer, Foreign Key) - Reference to Category
+    - `image_url` (String) - URL to product image
+    - `created_at` (DateTime) - Timestamp of creation (defaults to UTC now)
+  - Relationships:
+    - `category` - Many-to-One relationship with Category model
+  - Includes `__repr__` method for debugging
+
+**Key Features:**
+
+- **Database Relationships**: 
+  - Category has many Products (One-to-Many)
+  - Product belongs to one Category (Many-to-One)
+  - Bidirectional relationship using `back_populates`
+
+- **Data Integrity**:
+  - Foreign key constraint ensures products must belong to a valid category
+  - Unique constraints on category name and slug prevent duplicates
+  - Indexed fields for better query performance
+
+- **Model Structure**:
+  - All models inherit from `Base` (declarative base from `database.py`)
+  - Proper use of SQLAlchemy Column types
+  - Relationship definitions for easy navigation between related models
+
+✅ Database models created for Category and Product entities
+
 ## Architecture Theory
 
 ### Clean Architecture / Layered Architecture
@@ -294,7 +346,8 @@ def create(user_data: UserCreate):
 - ✅ Core application files created (`config.py`, `database.py`)
 - ✅ Database connection and session management configured
 - ✅ Application settings configured with Pydantic Settings
-- ⏳ Next: Create database models, schemas, repositories, services, and routes
+- ✅ Database models created (`Category`, `Product`)
+- ⏳ Next: Create schemas, repositories, services, and routes
 
 ## Notes
 
