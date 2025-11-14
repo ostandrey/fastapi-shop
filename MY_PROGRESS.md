@@ -211,6 +211,133 @@ Created SQLAlchemy models for the e-commerce shop:
 
 ✅ Database models created for Category and Product entities
 
+### 8. Pydantic Schemas Created
+
+Created Pydantic schemas for data validation and serialization:
+
+**Files created:**
+
+- `app/schemas/__init__.py` - Package initialization file
+
+- `app/schemas/category.py` - **Category Schemas**
+  - `CategoryBase`: Base schema with common fields
+    - `name`: String (5-100 characters)
+    - `slug`: String (5-100 characters, URL-friendly)
+  - `CategoryCreate`: Schema for creating categories (inherits from CategoryBase)
+  - `CategoryResponse`: Schema for API responses
+    - Includes `id` field
+    - Uses `form_attributes = True` for ORM compatibility
+
+- `app/schemas/product.py` - **Product Schemas**
+  - `ProductBase`: Base schema with common fields
+    - `name`: String (5-100 characters)
+    - `description`: Optional text
+    - `price`: Float (must be greater than 0)
+    - `category_id`: Integer (foreign key to category)
+    - `image_url`: Optional string
+  - `ProductCreate`: Schema for creating products (inherits from ProductBase)
+  - `ProductResponse`: Schema for API responses
+    - Includes `id`, `created_at` timestamp
+    - Includes nested `category` (CategoryResponse) for related data
+  - `ProductListResponse`: Schema for paginated product lists
+    - `products`: List of ProductResponse
+    - `total`: Total count of products
+
+- `app/schemas/cart.py` - **Shopping Cart Schemas**
+  - `CartItemBase`: Base schema for cart items
+    - `product_id`: Integer
+    - `quantity`: Integer (must be greater than 0)
+  - `CartItemCreate`: Schema for adding items to cart
+  - `CartItemUpdate`: Schema for updating cart item quantities
+  - `CartItem`: Schema representing a cart item with product details
+    - Includes product name, price, quantity, subtotal, image_url
+  - `CartResponse`: Schema for complete cart response
+    - `items`: List of CartItem
+    - `total`: Total price of all items
+    - `items_count`: Total number of items
+
+**Key Features:**
+- Field validation with Pydantic (min/max length, value constraints)
+- Request schemas (Create) for input validation
+- Response schemas for output formatting
+- Nested schemas for related data (Product includes Category)
+- List response schemas for pagination support
+
+✅ Pydantic schemas created for Category, Product, and Cart
+
+### 9. Repository Layer Created
+
+Created repository classes for database operations:
+
+**Files created:**
+
+- `app/repositories/category_repository.py` - **CategoryRepository**
+  - `get_all()`: Retrieve all categories
+  - `get_by_id(category_id)`: Get category by ID
+  - `get_by_slug(slug)`: Get category by slug (for URL routing)
+  - `create(category_data)`: Create new category
+  - Uses SQLAlchemy Session for database operations
+  - Returns Category model instances
+
+- `app/repositories/product_repository.py` - **ProductRepository**
+  - `get_all()`: Retrieve all products with category relationship (joinedload)
+  - `get_by_id(product_id)`: Get product by ID with category
+  - `get_by_category(category_id)`: Get all products in a category
+  - `create(product_data)`: Create new product
+  - `get_multiple_by_ids(product_ids)`: Get multiple products by IDs (for cart)
+  - Uses `joinedload` to eagerly load category relationships (prevents N+1 queries)
+  - Returns Product model instances with related category data
+
+**Key Features:**
+- Clean separation of database operations from business logic
+- Efficient querying with relationship loading
+- CRUD operations for both entities
+- Batch operations support (get_multiple_by_ids for cart functionality)
+
+✅ Repository layer created for Category and Product operations
+
+### 10. Service Layer Created
+
+Created service classes for business logic:
+
+**Files created:**
+
+- `app/services/category_service.py` - **CategoryService**
+  - `get_all_categories()`: Get all categories (returns list of CategoryResponse)
+  - `get_category_by_id(category_id)`: Get category by ID with 404 error handling
+  - `create_category(category_data)`: Create new category
+  - Uses CategoryRepository for data access
+  - Converts models to response schemas using `model_validate()`
+  - Handles HTTP exceptions (404 Not Found)
+
+- `app/services/product_service.py` - **ProductService**
+  - `get_all_products()`: Get all products (returns ProductListResponse)
+  - `get_product_by_id(product_id)`: Get product by ID with 404 error handling
+  - `get_product_by_category(category_id)`: Get products filtered by category
+  - `create_product(product_data)`: Create new product with category validation
+  - Uses both ProductRepository and CategoryRepository
+  - Validates category exists before creating product
+  - Returns formatted ProductListResponse with total count
+
+- `app/services/cart_service.py` - **CartService**
+  - `add_to_cart(cart_data, item)`: Add item to cart (increments if exists)
+  - `update_cart_item(cart_data, item)`: Update item quantity in cart
+  - `remove_from_cart(cart_data, product_id)`: Remove item from cart
+  - `get_cart_details(cart_data)`: Get full cart with product details and totals
+  - Uses ProductRepository to fetch product information
+  - Calculates subtotals and total price
+  - Returns CartResponse with formatted cart items
+  - Note: Cart is stored in memory (Dict), not in database
+
+**Key Features:**
+- Business logic separated from data access
+- Error handling with appropriate HTTP status codes
+- Data transformation (models → schemas)
+- Validation (e.g., category must exist before creating product)
+- Cart functionality with in-memory storage
+
+✅ Service layer created for Category, Product, and Cart operations
+
 ## Architecture Theory
 
 ### Clean Architecture / Layered Architecture
@@ -347,7 +474,10 @@ def create(user_data: UserCreate):
 - ✅ Database connection and session management configured
 - ✅ Application settings configured with Pydantic Settings
 - ✅ Database models created (`Category`, `Product`)
-- ⏳ Next: Create schemas, repositories, services, and routes
+- ✅ Pydantic schemas created (Category, Product, Cart)
+- ✅ Repository layer created (CategoryRepository, ProductRepository)
+- ✅ Service layer created (CategoryService, ProductService, CartService)
+- ⏳ Next: Create routes/API endpoints and main application file
 
 ## Notes
 
