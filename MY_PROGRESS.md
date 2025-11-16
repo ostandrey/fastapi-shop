@@ -446,6 +446,56 @@ Created the main FastAPI application entry point:
 
 ✅ Main application file and runner script created
 
+### 13. Database Seeding Script Created
+
+Created a script to populate the database with test data:
+
+**Files created:**
+
+- `backend/seed_data.py` - **Database Seeding Script**
+  - Purpose: Populate database with sample categories and products for testing
+  - Functions:
+    - `create_categories(db)`: Creates 4 categories
+      - Electronics
+      - Clothing
+      - Books
+      - Home & Garden
+    - `create_products(db, categories)`: Creates 13 sample products across categories
+      - 5 Electronics products (headphones, smartwatch, laptop stand, USB-C hub, keyboard)
+      - 1 Clothing product (running shoes)
+      - 3 Books (Python guide, design book, cooking book)
+      - 4 Home & Garden products (plant pots, LED lamp, pillows, garden tools)
+    - `seed_database()`: Main function that orchestrates the seeding process
+  - Features:
+    - Checks if database already has data (prevents duplicate seeding)
+    - Uses placeholder images from Unsplash
+    - Includes detailed product descriptions
+    - Proper error handling with rollback on failure
+    - Progress messages for each step
+  - Usage: Run with `python seed_data.py` from backend directory
+
+**Database Created:**
+
+- `backend/shop.db` - **SQLite Database File**
+  - Database file created after running the application or seed script
+  - Contains tables: `categories` and `product`
+  - Ready to be populated with seed data
+
+**Static Files Directory:**
+
+- `backend/static/images/` - **Static Images Directory**
+  - Directory created for serving static image files
+  - Currently products use external URLs (Unsplash), but directory is ready for local image storage
+
+**Key Features:**
+- Comprehensive test data for development and testing
+- Prevents duplicate seeding
+- Realistic product data with descriptions and prices
+- External image URLs for quick setup
+- Easy to extend with more categories/products
+
+✅ Database seeding script created with sample data
+
 ## Architecture Theory
 
 ### Clean Architecture / Layered Architecture
@@ -588,6 +638,9 @@ def create(user_data: UserCreate):
 - ✅ API routes created (Categories, Products, Cart)
 - ✅ Main application file created (`app/main.py`)
 - ✅ Application runner script created (`run.py`)
+- ✅ Database seeding script created (`seed_data.py`)
+- ✅ Database file created (`shop.db`)
+- ✅ Static files directory created (`static/images/`)
 - ✅ **Backend API is complete and ready to run!**
 - ⏳ Next: Test the API, create frontend, or add additional features
 
