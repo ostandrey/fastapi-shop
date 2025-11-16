@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, Text
 from sqlalchemy.orm import relationship
@@ -11,7 +11,7 @@ class Product(Base):
     name = Column(String, nullable=False, index=True)
     description = Column(Text)
     price = Column(Float, nullable=False)
-    category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
     image_url = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
 

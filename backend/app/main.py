@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from .config import settings
 from .database import init_db
+from .models import Category, Product  # Import models to ensure they're registered
 from .routes import products_router, categories_router, cart_router
 
 app = FastAPI(
