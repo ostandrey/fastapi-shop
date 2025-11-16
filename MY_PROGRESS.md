@@ -338,6 +338,114 @@ Created service classes for business logic:
 
 ✅ Service layer created for Category, Product, and Cart operations
 
+### 11. API Routes Created
+
+Created FastAPI route handlers for all endpoints:
+
+**Files created:**
+
+- `app/routes/__init__.py` - Exports all routers for easy importing
+  - Exports: `products_router`, `categories_router`, `cart_router`
+
+- `app/routes/categories.py` - **Category Routes**
+  - Router prefix: `/api/categories`
+  - `GET /api/categories`: Get all categories
+    - Returns: List of CategoryResponse
+    - Status: 200 OK
+  - `GET /api/categories/{category_id}`: Get category by ID
+    - Returns: CategoryResponse
+    - Status: 200 OK
+  - Uses CategoryService for business logic
+  - Database session injected via dependency injection
+
+- `app/routes/products.py` - **Product Routes**
+  - Router prefix: `/api/products`
+  - `GET /api/products`: Get all products
+    - Returns: ProductListResponse (with total count)
+    - Status: 200 OK
+  - `GET /api/products/{product_id}`: Get product by ID
+    - Returns: ProductResponse (includes category data)
+    - Status: 200 OK
+  - `GET /api/products/category/{category_id}`: Get products by category
+    - Returns: ProductListResponse
+    - Status: 200 OK
+  - Uses ProductService for business logic
+  - Database session injected via dependency injection
+
+- `app/routes/cart.py` - **Shopping Cart Routes**
+  - Router prefix: `/api/cart`
+  - `POST /api/cart/add`: Add item to cart
+    - Request: AddToCartRequest (product_id, quantity, cart dict)
+    - Returns: Updated cart dictionary
+    - Status: 200 OK
+  - `POST /api/cart`: Get cart details
+    - Request: Cart dictionary
+    - Returns: CartResponse (with items, total, items_count)
+    - Status: 200 OK
+  - `PUT /api/cart/update`: Update cart item quantity
+    - Request: UpdateCartRequest (product_id, quantity, cart dict)
+    - Returns: Updated cart dictionary
+    - Status: 200 OK
+  - `DELETE /api/cart/remove/{product_id}`: Remove item from cart
+    - Request: RemoveFromCartRequest (cart dict)
+    - Returns: Updated cart dictionary
+    - Status: 200 OK
+  - Uses CartService for business logic
+  - Cart stored in-memory (passed as request body)
+
+**Key Features:**
+- Clean route handlers that delegate to services
+- Proper HTTP status codes
+- Response models defined for type safety
+- Dependency injection for database sessions
+- Router prefixes and tags for API organization
+- RESTful API design patterns
+
+✅ API routes created for Categories, Products, and Cart
+
+### 12. Main Application File Created
+
+Created the main FastAPI application entry point:
+
+**Files created:**
+
+- `app/main.py` - **FastAPI Application**
+  - Creates FastAPI app instance with:
+    - Title from settings
+    - Debug mode from settings
+    - Custom docs URLs (`/api/docs`, `/api/redoc`)
+  - **CORS Middleware**: Configured to allow frontend origins
+    - Allows credentials
+    - Allows all methods and headers
+    - Origins from settings (localhost ports)
+  - **Static Files**: Mounts static directory for serving images/files
+  - **Routers**: Includes all route modules
+    - Products router
+    - Categories router
+    - Cart router
+  - **Startup Event**: Initializes database tables on startup
+  - **Root Endpoint**: `GET /` - Welcome message with API info
+  - **Health Check**: `GET /healthcheck` - Returns health status
+
+- `run.py` - **Application Runner Script**
+  - Runs uvicorn ASGI server
+  - Configuration:
+    - Host: `0.0.0.0` (accessible from all interfaces)
+    - Port: `8000`
+    - Reload: Enabled in debug mode (auto-reload on code changes)
+    - Log level: `info`
+  - Entry point: `app.main:app`
+
+**Key Features:**
+- Production-ready FastAPI application setup
+- CORS configured for frontend integration
+- Static file serving for images
+- Automatic database initialization
+- Development-friendly with auto-reload
+- Health check endpoint for monitoring
+
+✅ Main application file and runner script created
+
 ## Architecture Theory
 
 ### Clean Architecture / Layered Architecture
@@ -477,7 +585,11 @@ def create(user_data: UserCreate):
 - ✅ Pydantic schemas created (Category, Product, Cart)
 - ✅ Repository layer created (CategoryRepository, ProductRepository)
 - ✅ Service layer created (CategoryService, ProductService, CartService)
-- ⏳ Next: Create routes/API endpoints and main application file
+- ✅ API routes created (Categories, Products, Cart)
+- ✅ Main application file created (`app/main.py`)
+- ✅ Application runner script created (`run.py`)
+- ✅ **Backend API is complete and ready to run!**
+- ⏳ Next: Test the API, create frontend, or add additional features
 
 ## Notes
 
