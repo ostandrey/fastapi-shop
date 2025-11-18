@@ -1,0 +1,821 @@
+{
+	"info": {
+		"_postman_id": "fastapi-shop-collection",
+		"name": "FastAPI Shop API",
+		"description": "Postman collection for FastAPI Shop API endpoints with automated tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Root & Health",
+			"item": [
+				{
+					"name": "Root",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"pm.test(\"Response has message field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Root endpoint - Welcome message"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"pm.test(\"Response has status field with value 'healthy'\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData.status).to.eql('healthy');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/healthcheck",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"healthcheck"
+							]
+						},
+						"description": "Health check endpoint"
+					},
+					"response": []
+				}
+			],
+			"description": "Root and health check endpoints"
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Each category has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0]).to.have.all.keys('id', 'name', 'description', 'created_at');",
+									"        pm.collectionVariables.set('category_id', jsonData[0].id);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Category ID is a number\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0].id).to.be.a('number');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						},
+						"description": "Get all categories"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.all.keys('id', 'name', 'description', 'created_at');",
+									"});",
+									"",
+									"pm.test(\"Category ID matches requested ID\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestedId = parseInt(pm.variables.get('category_id'));",
+									"    pm.expect(jsonData.id).to.eql(requestedId);",
+									"});",
+									"",
+									"pm.test(\"Name is a string\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories/{{category_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"{{category_id}}"
+							]
+						},
+						"description": "Get a specific category by ID"
+					},
+					"response": []
+				}
+			],
+			"description": "Category endpoints"
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has products and total fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.all.keys('products', 'total');",
+									"});",
+									"",
+									"pm.test(\"Products is an array\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Total matches products array length\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.total).to.eql(jsonData.products.length);",
+									"});",
+									"",
+									"pm.test(\"Each product has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.products.length > 0) {",
+									"        const product = jsonData.products[0];",
+									"        pm.expect(product).to.have.all.keys('id', 'name', 'description', 'price', 'category_id', 'image_url', 'created_at', 'category');",
+									"        pm.collectionVariables.set('product_id', product.id);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Product price is a positive number\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.products.length > 0) {",
+									"        pm.expect(jsonData.products[0].price).to.be.a('number');",
+									"        pm.expect(jsonData.products[0].price).to.be.above(0);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Get all products with pagination info"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has all required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.all.keys('id', 'name', 'description', 'price', 'category_id', 'image_url', 'created_at', 'category');",
+									"});",
+									"",
+									"pm.test(\"Product ID matches requested ID\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestedId = parseInt(pm.variables.get('product_id'));",
+									"    pm.expect(jsonData.id).to.eql(requestedId);",
+									"});",
+									"",
+									"pm.test(\"Category object is present\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.category).to.be.an('object');",
+									"    pm.expect(jsonData.category).to.have.property('id');",
+									"    pm.expect(jsonData.category).to.have.property('name');",
+									"});",
+									"",
+									"pm.test(\"Price is a positive number\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.price).to.be.a('number');",
+									"    pm.expect(jsonData.price).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"{{product_id}}"
+							]
+						},
+						"description": "Get a specific product by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products by Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has products and total fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.all.keys('products', 'total');",
+									"});",
+									"",
+									"pm.test(\"All products belong to requested category\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestedCategoryId = parseInt(pm.variables.get('category_id'));",
+									"    jsonData.products.forEach(function(product) {",
+									"        pm.expect(product.category_id).to.eql(requestedCategoryId);",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Total matches products array length\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.total).to.eql(jsonData.products.length);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/category/{{category_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"category",
+								"{{category_id}}"
+							]
+						},
+						"description": "Get all products in a specific category"
+					},
+					"response": []
+				}
+			],
+			"description": "Product endpoints"
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Add to Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has cart field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('cart');",
+									"});",
+									"",
+									"pm.test(\"Cart contains added product\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    const productId = requestBody.product_id.toString();",
+									"    pm.expect(jsonData.cart).to.have.property(productId);",
+									"    pm.expect(jsonData.cart[productId]).to.eql(requestBody.quantity);",
+									"});",
+									"",
+									"pm.test(\"Cart is an object\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.cart).to.be.an('object');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": 1,\n    \"quantity\": 2,\n    \"cart\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "Add an item to the cart"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cart Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.all.keys('items', 'total', 'items_count');",
+									"});",
+									"",
+									"pm.test(\"Items is an array\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.items).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Total is a number\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.total).to.be.a('number');",
+									"    pm.expect(jsonData.total).to.be.at.least(0);",
+									"});",
+									"",
+									"pm.test(\"Items count matches array length\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.items_count).to.eql(jsonData.items.length);",
+									"});",
+									"",
+									"pm.test(\"Each item has required fields\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.items.length > 0) {",
+									"        pm.expect(jsonData.items[0]).to.have.all.keys('product_id', 'quantity', 'product');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"1\": 2,\n    \"2\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							]
+						},
+						"description": "Get cart details with items, total, and count. Pass cart dictionary in body (product_id: quantity pairs)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cart Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has cart field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('cart');",
+									"});",
+									"",
+									"pm.test(\"Cart contains updated product with new quantity\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    const productId = requestBody.product_id.toString();",
+									"    pm.expect(jsonData.cart).to.have.property(productId);",
+									"    pm.expect(jsonData.cart[productId]).to.eql(requestBody.quantity);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": 1,\n    \"quantity\": 3,\n    \"cart\": {\n        \"1\": 2\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"update"
+							]
+						},
+						"description": "Update the quantity of an item in the cart"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove from Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});",
+									"",
+									"pm.test(\"Response has cart field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('cart');",
+									"});",
+									"",
+									"pm.test(\"Removed product is not in cart\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const productId = pm.variables.get('product_id');",
+									"    pm.expect(jsonData.cart).to.not.have.property(productId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cart\": {\n        \"1\": 2,\n        \"2\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/remove/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"remove",
+								"{{product_id}}"
+							]
+						},
+						"description": "Remove an item from the cart"
+					},
+					"response": []
+				}
+			],
+			"description": "Shopping cart endpoints"
+		},
+		{
+			"name": "Error Testing",
+			"item": [
+				{
+					"name": "Get Non-existent Category (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response has error detail\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('detail');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories/999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"999"
+							]
+						},
+						"description": "Test 404 error for non-existent category"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Non-existent Product (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response has error detail\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('detail');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"999"
+							]
+						},
+						"description": "Test 404 error for non-existent product"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products by Non-existent Category (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response has error detail\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('detail');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/category/999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"category",
+								"999"
+							]
+						},
+						"description": "Test 404 error for products in non-existent category"
+					},
+					"response": []
+				}
+			],
+			"description": "Error testing endpoints (404 scenarios)"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "category_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "product_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

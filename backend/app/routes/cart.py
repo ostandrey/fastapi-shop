@@ -1,9 +1,7 @@
-from urllib import request
-
 from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from typing import List, Dict
+from typing import Dict
 from ..database import get_db
 from ..services.cart_service import CartService
 from ..schemas.cart import CartItemCreate, CartItemUpdate, CartResponse
@@ -51,5 +49,5 @@ def update_cart_item(request: UpdateCartRequest, db: Session = Depends(get_db)):
 @router.delete('/remove/{product_id}', status_code=status.HTTP_200_OK)
 def remove_from_cart(product_id: int, request: RemoveFromCartRequest, db: Session = Depends(get_db)):
         service = CartService(db)
-        updated_cart = service.remove_from_cart(request.cartm, product_id)
+        updated_cart = service.remove_from_cart(request.cart, product_id)
         return {"cart": updated_cart}
