@@ -19,14 +19,14 @@ class ProductResponse(ProductBase):
     name: str
     description: Optional[str]
     price: float
-    category_id: str
+    category_id: int
     image_url: Optional[str]
-    create_at: datetime
+    created_at: datetime
     category: CategoryResponse = Field(..., description="Product category")
 
     class Config:
-        form_attributes = True
+        from_attributes = True
 
-class ProductListResponse(ProductBase):
+class ProductListResponse(BaseModel):
     products: List[ProductResponse]
     total: int = Field(..., description="Total number of products")
