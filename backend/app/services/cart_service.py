@@ -34,7 +34,7 @@ class CartService:
                 detail=f"Product with id {item.product_id} not found in the cart"
             )
 
-        cart_data[item.product_id] += item.quantity
+        cart_data[item.product_id] = item.quantity
         return cart_data
 
     def remove_from_cart(self, cart_data:Dict[int,int], product_id: int) -> Dict[int, int]:

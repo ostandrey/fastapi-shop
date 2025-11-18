@@ -129,22 +129,30 @@ const updating = ref(false)
  * Increase product quantity
  */
 async function increaseQuantity() {
+  if (updating.value) return // Prevent double-clicks
   updating.value = true
-  await cartStore.updateQuantity(props.item.product_id, props.item.quantity + 1)
-  updating.value = false
+  try {
+    await cartStore.updateQuantity(props.item.product_id, props.item.quantity + 1)
+  } finally {
+    updating.value = false
+  }
 }
 
 /**
  * Decrease product quantity
  */
 async function decreaseQuantity() {
+  if (updating.value) return // Prevent double-clicks
   updating.value = true
-  if (props.item.quantity > 1) {
-    await cartStore.updateQuantity(props.item.product_id, props.item.quantity - 1)
-  } else {
-    await cartStore.removeFromCart(props.item.product_id)
+  try {
+    if (props.item.quantity > 1) {
+      await cartStore.updateQuantity(props.item.product_id, props.item.quantity - 1)
+    } else {
+      await cartStore.removeFromCart(props.item.product_id)
+    }
+  } finally {
+    updating.value = false
   }
-  updating.value = false
 }
 
 /**
